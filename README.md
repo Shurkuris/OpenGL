@@ -6,9 +6,10 @@ I've been getting more interested into the Rendering side of Graphics. This proj
 
 ---------
 Current Features
-W-A-S-D key movement & mouse look. (Q lowers & E raises)
 
-Hard-coded pyramid model with brick & dirt texture.
+(1) W-A-S-D key movement & mouse look. (Q lowers & E raises)
+
+(2) Hard-coded pyramid model with brick & dirt texture.
 
 
 ---------
