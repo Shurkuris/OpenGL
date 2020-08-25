@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "Light.h"
 
 const float toRadians = 3.14159265f / 180.0f;
 
@@ -27,6 +28,8 @@ Camera camera;
 
 Texture brickTexture;
 Texture dirtTexture;
+
+Light mainLight;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -81,7 +84,14 @@ int main()
     dirtTexture = Texture("Textures/dirt.png");
     dirtTexture.LoadTexture();
 
-    GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0;
+    mainLight = Light(1.0f, 1.0f, 1.0f, 0.3f);
+
+    GLuint uniformProjection       = 0;
+    GLuint uniformModel            = 0;
+    GLuint uniformView             = 0;
+    GLuint uniformAmbientIntensity = 0;
+    GLuint uniformAmbientColor     = 0;
+
     glm::mat4 projection = glm::perspective(45.0f, mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
     while (!mainWindow.getShouldClose())
@@ -101,9 +111,13 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shaderList[0]->UseShader();
-        uniformModel = shaderList[0]->GetModelLocation();
-        uniformProjection = shaderList[0]->GetProjectionLocation();
-        uniformView = shaderList[0]->GetViewLocation();
+        uniformModel            = shaderList[0]->GetModelLocation();
+        uniformProjection       = shaderList[0]->GetProjectionLocation();
+        uniformView             = shaderList[0]->GetViewLocation();
+        uniformAmbientColor     = shaderList[0]->GetAmbientColorLocation();
+        uniformAmbientIntensity = shaderList[0]->GetAmbientIntensityLocation();
+
+        mainLight.UseLight(uniformAmbientIntensity, uniformAmbientColor);
 
         glm::mat4 model(1.0f);
         model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -2.5f));
