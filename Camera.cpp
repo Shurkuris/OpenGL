@@ -31,8 +31,8 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
     if (keys[GLFW_KEY_S]) position -= front * velocity;
     if (keys[GLFW_KEY_A]) position -= right * velocity;
     if (keys[GLFW_KEY_D]) position += right * velocity;
-    if (keys[GLFW_KEY_E]) position -= up    * velocity;
-    if (keys[GLFW_KEY_Q]) position += up    * velocity;
+    if (keys[GLFW_KEY_E]) position += up    * velocity;
+    if (keys[GLFW_KEY_Q]) position -= up    * velocity;
 }
 
 void Camera::mouseControl(GLfloat xChange, GLfloat yChange)
