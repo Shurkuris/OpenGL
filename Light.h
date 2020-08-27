@@ -11,8 +11,8 @@ public:
           GLfloat xDir, GLfloat yDir, GLfloat zDir, GLfloat dIntensity);
     ~Light();
 
-    void UseLight(GLfloat ambientIntensityLocation, GLfloat ambientColorLocation,
-                  GLfloat diffuseIntensityLocation, GLfloat directionLocation);
+    void UseLight(GLuint ambientIntensityLocation, GLuint ambientColorLocation,
+                  GLuint diffuseIntensityLocation, GLuint directionLocation);
 
 private:
     glm::vec3 color;
