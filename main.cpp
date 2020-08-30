@@ -24,6 +24,8 @@
 #include "SpotLight.h"
 #include "Material.h"
 
+#include "Model.h"
+
 const float toRadians = 3.14159265f / 180.0f;
 
 WindowGL mainWindow;
@@ -37,6 +39,8 @@ Texture plainTexture;
 
 Material shinyMaterial;
 Material dullMaterial;
+
+Model plane;
 
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
@@ -139,17 +143,20 @@ int main()
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 1.0f);
 
     brickTexture = Texture("Textures/brick.png");
-    brickTexture.LoadTexture();
+    brickTexture.LoadTextureA();
     dirtTexture = Texture("Textures/dirt.png");
-    dirtTexture.LoadTexture();
+    dirtTexture.LoadTextureA();
     plainTexture = Texture("Textures/plain.png");
-    plainTexture.LoadTexture();
+    plainTexture.LoadTextureA();
 
     shinyMaterial = Material(4.0f, 256);
     dullMaterial  = Material(0.3f, 4);
 
+    plane = Model();
+    plane.LoadModel("Models/dhc1.obj");
+
     mainLight = DirectionalLight(1.0f, 1.0f, 1.0f, 
-                                 0.0f, 0.0f, 
+                                 0.1f, 0.7f, 
                                  0.0f, 0.0f, -1.0f);
 
     unsigned int pointLightCount = 0;
@@ -224,7 +231,7 @@ int main()
 
         shaderList[0]->SetDirectionalLight(&mainLight);
         shaderList[0]->SetPointLights(pointLights, pointLightCount);
-        shaderList[0]->SetSpotLights(spotLights, spotLightCount);
+        //shaderList[0]->SetSpotLights(spotLights, spotLightCount);
 
         glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(uniformView      , 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
@@ -253,6 +260,13 @@ int main()
         plainTexture.UseTexture();
         shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
         meshList[2]->RenderMesh();
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+        shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
+        plane.RenderModel();
 
         glUseProgram(0);
 
