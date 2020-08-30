@@ -1,13 +1,11 @@
-# OpenGL
-Learning about OpenGL
-
-I've been getting more interested into the Rendering side of Graphics. This project will detail my journey.
+# Learning OpenGL
+I've been getting more interested into the Rendering side of Graphics. This project will detail my journey through it.
 
 Currently following Ben Cook's Udemy OpenGL course as my intro into OpenGL.
 
 
 ---------
-Current Features
+# Current Features
 
 (1) W-A-S-D key movement & mouse look. (Q raises & E lowers)
 
@@ -15,12 +13,13 @@ Current Features
 
 
 --------
-Screenshots
+# In-progress Screenshots
 
 ![2020/08/28 - PointLights](https://github.com/Shurkuris/OpenGL/blob/master/misc/snapshots/2020_08_28-PointLights.png)
+![2020/08/29 - SpotLights](https://github.com/Shurkuris/OpenGL/blob/master/misc/snapshots/2020_08_29-SpotLights.png)
 
 ---------
-Resources
+# Resources
 
 -GPU Gems 1, 2, 3
 
