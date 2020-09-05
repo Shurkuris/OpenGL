@@ -5,12 +5,13 @@ Currently following Ben Cook's Udemy OpenGL course as my intro into OpenGL.
 
 # Current Features
 
-(1) W-A-S-D key movement & mouse look. (Q raises & E lowers)
+(1) W-A-S-D key movement & mouse look. (Q raises & E lowers; F toggles flashlight)
 
 (2) Hard-coded pyramid model with brick & dirt texture.
 
 # In-progress Screenshots
 
+![2020/09/05 - PCF_OmniDirectionalShadows](https://github.com/Shurkuris/OpenGL/blob/master/misc/snapshots/2020_09_5-PCF_OmniDirectionalShadows.png)
 ![2020/08/31 - PCF_DirectionalShadows](https://github.com/Shurkuris/OpenGL/blob/master/misc/snapshots/2020_08_31-PCF_DirectionalShadows.png)
 ![2020/08/29 - ModelLoading](https://github.com/Shurkuris/OpenGL/blob/master/misc/snapshots/2020_08_29-ModelLoading.png)
 ![2020/08/29 - SpotLights](https://github.com/Shurkuris/OpenGL/blob/master/misc/snapshots/2020_08_29-SpotLights.png)
