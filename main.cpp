@@ -167,7 +167,7 @@ void RenderScene()
     meshList[0]->RenderMesh();
 
     model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(1.0f, 0.0f, -2.5f));
+    model = glm::translate(model, glm::vec3(6.0f, 0.0f, 5.5f));
     model = glm::rotate(model, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     dirtTexture.UseTexture();
@@ -206,6 +206,8 @@ void DirectionalShadowMapPass(DirectionalLight* light)
     uniformModel = directionalShadowShader.GetModelLocation();
     directionalShadowShader.SetDirectionalLightTransform(&light->CalculateLightTransform());
 
+    directionalShadowShader.Validate();
+
     RenderScene();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -228,6 +230,8 @@ void OmniShadowMapPass(PointLight* light)
     glUniform1f(uniformFarPlane, light->GetFarPlane());
     omniShadowShader.SetLightMatrices(light->CalculateLightTransform());
 
+    omniShadowShader.Validate();
+
     RenderScene();
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -237,12 +241,12 @@ void RenderPass(glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
 {
     shaderList[0]->UseShader();
 
-    uniformModel = shaderList[0]->GetModelLocation();
-    uniformProjection = shaderList[0]->GetProjectionLocation();
-    uniformView = shaderList[0]->GetViewLocation();
-    uniformEyePosition = shaderList[0]->GetEyePositionLocation();
+    uniformModel             = shaderList[0]->GetModelLocation();
+    uniformProjection        = shaderList[0]->GetProjectionLocation();
+    uniformView              = shaderList[0]->GetViewLocation();
+    uniformEyePosition       = shaderList[0]->GetEyePositionLocation();
     uniformSpecularIntensity = shaderList[0]->GetSpecularIntensityLocation();
-    uniformShininess = shaderList[0]->GetShininessLocation();
+    uniformShininess         = shaderList[0]->GetShininessLocation();
 
     glViewport(0, 0, 1366, 768);
 
@@ -254,17 +258,19 @@ void RenderPass(glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
     glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
     shaderList[0]->SetDirectionalLight(&mainLight);
-    shaderList[0]->SetPointLights(pointLights, pointLightCount);
-    shaderList[0]->SetSpotLights(spotLights, spotLightCount);
+    shaderList[0]->SetPointLights(pointLights, pointLightCount, 3, 0);
+    shaderList[0]->SetSpotLights(spotLights, spotLightCount, 3 + pointLightCount, pointLightCount);
     shaderList[0]->SetDirectionalLightTransform(&mainLight.CalculateLightTransform());
 
-    mainLight.GetShadowMap()->Read(GL_TEXTURE1);
-    shaderList[0]->SetTexture(0);
-    shaderList[0]->SetDirectionalShadowMap(1);
+    mainLight.GetShadowMap()->Read(GL_TEXTURE2);
+    shaderList[0]->SetTexture(1);
+    shaderList[0]->SetDirectionalShadowMap(2);
 
     glm::vec3 lowerLight = camera.getCameraPosition();
     lowerLight.y -= 0.3f;
     spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+
+    shaderList[0]->Validate();
 
     RenderScene();
 }
@@ -294,21 +300,21 @@ int main()
 
     mainLight = DirectionalLight(4096, 4096,
                                  1.0f, 1.0f, 1.0f, 
-                                 0.1f, 0.3f, 
+                                 0.0f, 0.0f, 
                                  0.0f, -15.0f, -15.0f);
 
     pointLights[0] = PointLight(1024, 1024, 
                                  0.01f, 100.0f,
-                                 0.0f, 1.0f, 0.0f,
-                                 0.0f, 0.3f,
+                                 1.0f, 1.0f, 0.0f,
+                                 0.5f, 0.9f,
                                 -1.0f, 0.0f, 0.0f,
                                  0.3f, 0.2f, 0.1f);
     pointLightCount++;
     pointLights[1] = PointLight(1024, 1024,
                                 0.01f, 100.0f,
-                                0.0f, 0.0f, 1.0f,
-                                0.0f, 0.3f,
-                                1.0f, 0.0f, 0.0f,
+                                0.0f, 1.0f, 1.0f,
+                                0.9f, 0.9f,
+                                7.0f, 0.0f, 4.0f,
                                 0.3f, 0.2f, 0.1f);
     pointLightCount++;
 
@@ -345,6 +351,12 @@ int main()
 
         camera.keyControl(mainWindow.getsKeys(), deltaTime);
         camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+        if (mainWindow.getsKeys()[GLFW_KEY_F])
+        {
+            spotLights[0].Toggle();
+            mainWindow.getsKeys()[GLFW_KEY_F] = false;
+        }
 
         DirectionalShadowMapPass(&mainLight);
 
